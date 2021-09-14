@@ -20,7 +20,7 @@ const TaskSchema = new Schema({
 		type: String,
 	},
 	enemyActivity: {
-		type: String,
+		type: Boolean,
 	},
 	items: {
 		type: Array,
