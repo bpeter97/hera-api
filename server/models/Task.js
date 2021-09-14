@@ -4,6 +4,9 @@ const Schema = mongoose.Schema;
 
 // Define the Task model.
 const TaskSchema = new Schema({
+	requestedBy: {
+		type: String,
+	},
 	requestedAt: {
 		type: Date,
 	},
