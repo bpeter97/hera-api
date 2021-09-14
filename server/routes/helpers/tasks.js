@@ -22,14 +22,20 @@ exports.getTasks = (req, res) => {
 // @desc    Retrieves a task
 // @access  Private
 exports.getTask = async (req, res) => {
-	// let errors = {};
+	let errors = {};
 
-	// if (!ObjectID.isValid(req.params.id)) {
-	// 	errors.task = "There was no task found";
-	// 	return res.status(400).json(errors);
-	// }
+	let id = parseInt(req.params.id);
 
-	Task.findOne({ taskId: req.params.id })
+	if (typeof id === "string" || id instanceof String) {
+		errors.task = "There was no task found";
+		return res.status(400).json(errors);
+	}
+	if (!Number.isInteger(id)) {
+		errors.task = "There was no task found";
+		return res.status(400).json(errors);
+	}
+
+	Task.findOne({ taskId: id })
 		.then((task) => {
 			if (!task) {
 				return res.json({ error: "There was no task found" });
