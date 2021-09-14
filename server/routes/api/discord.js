@@ -37,9 +37,10 @@ router.get("/callback", async (req, res) => {
 			grantType: "authorization_code",
 		})
 		.then((access_data) => {
-			res.redirect(
-				`http://localhost:8080/?d=${access_data.access_token}`
-			);
+			let url = process.env.FRONTEND
+				? `${process.env.FRONTEND}?d${access_data.access_token}`
+				: `http://localhost:8080/?d=${access_data.access_token}`;
+			res.redirect(url);
 		});
 });
 
