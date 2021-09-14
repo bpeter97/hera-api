@@ -1,5 +1,5 @@
 const router = require("express").Router();
-var redirect = "http://localhost:5000/api/discord/callback";
+var redirect = "https://hera-tasks.herokuapp.com/api/discord/callback";
 
 const DiscordOauth2 = require("discord-oauth2");
 const oauth = new DiscordOauth2({
