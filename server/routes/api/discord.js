@@ -1,0 +1,84 @@
+const router = require("express").Router();
+var redirect = "http://localhost:5000/api/discord/callback";
+
+const DiscordOauth2 = require("discord-oauth2");
+const oauth = new DiscordOauth2({
+	clientId: process.env.DAPP_CID,
+	clientSecret: process.env.DAPP_SID,
+	redirectUri: redirect,
+});
+
+// Retrieving a refresh code:
+// oauth.tokenRequest({
+// 	// clientId, clientSecret and redirectUri are omitted, as they were already set on the class constructor
+// 	clientId: process.env.DAPP_CID,
+// 	clientSecret: process.env.DAPP_SID,
+// 	refreshToken: access_data.refresh_token,
+// 	grantType: "refresh_token",
+// 	scope: ["identify", "email","guilds"],
+// 	redirectUri: redirect,
+// });
+
+// @route   api/discord
+// @POST    redirects a user.
+// @access  public
+router.get("/", (req, res) => {
+	res.redirect(process.env.RES_URL);
+});
+
+router.get("/callback", async (req, res) => {
+	if (!req.query.code) throw new Error("NoCodeProvided");
+	const code = req.query.code;
+
+	oauth
+		.tokenRequest({
+			code: code,
+			scope: "identify guilds",
+			grantType: "authorization_code",
+		})
+		.then((access_data) => {
+			res.redirect(
+				`http://localhost:8080/?d=${access_data.access_token}`
+			);
+		});
+});
+
+router.get("/user", async (req, res) => {
+	console.log(req.headers.authorization);
+	oauth
+		.getUser(req.headers.authorization)
+		.then((userInfo) => {
+			let userData = {
+				info: userInfo,
+				guild: {},
+			};
+
+			oauth.getUserGuilds(req.headers.authorization).then((guilds) => {
+				found = guilds.find(
+					(guild) => guild.id === process.env.GUILD_ID
+				);
+
+				userData.guild = found;
+
+				if (!found) {
+					res.status(401).send({
+						error: "You must be apart of the units discord channel before being able to log in!",
+					});
+				} else {
+					res.send(userData);
+				}
+			});
+		})
+		.catch((e) => console.log(e));
+});
+
+router.get("/user/logout", (req, res) => {
+	// You must encode your client ID along with your client secret including the colon in between
+	const credentials = Buffer.from(
+		`${process.env.DAPP_CID}:${process.env.DAPP_SID}`
+	).toString("base64");
+
+	oauth.revokeToken(req.headers.authorization, credentials).then(console.log);
+});
+
+module.exports = router;

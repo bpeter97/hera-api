@@ -1,0 +1,7 @@
+{
+  "name": "1strl-mevn",
+  "template": "Default",
+  "isConfigured": {
+    "client": true
+  }
+}
