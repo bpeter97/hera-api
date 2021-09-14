@@ -22,14 +22,14 @@ exports.getTasks = (req, res) => {
 // @desc    Retrieves a task
 // @access  Private
 exports.getTask = async (req, res) => {
-	let errors = {};
+	// let errors = {};
 
-	if (!ObjectID.isValid(req.params.id)) {
-		errors.task = "There was no task found";
-		return res.status(400).json(errors);
-	}
+	// if (!ObjectID.isValid(req.params.id)) {
+	// 	errors.task = "There was no task found";
+	// 	return res.status(400).json(errors);
+	// }
 
-	Task.findById({ taskId: req.params.id })
+	Task.findOne({ taskId: req.params.id })
 		.then((task) => {
 			if (!task) {
 				return res.json({ error: "There was no task found" });
