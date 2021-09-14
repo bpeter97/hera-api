@@ -29,7 +29,7 @@ exports.getTask = async (req, res) => {
 		return res.status(400).json(errors);
 	}
 
-	Task.findById(req.params.id)
+	Task.findById({ taskId: req.params.id })
 		.then((task) => {
 			if (!task) {
 				return res.json({ error: "There was no task found" });
