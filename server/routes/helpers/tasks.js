@@ -1,5 +1,3 @@
-// const dbcon = require("../db/connection");
-const mongodb = require("mongodb");
 const _ = require("lodash");
 const Task = require("../../models/Task");
 const ObjectID = require("mongoose").Types.ObjectId;

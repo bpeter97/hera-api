@@ -19,9 +19,11 @@ app.use(cors());
 // routes
 const tasks = require("./routes/api/tasks");
 const discord = require("./routes/api/discord");
+const items = require("./routes/api/items");
 
 app.use("/api/tasks", tasks);
 app.use("/api/discord", discord);
+app.use("/api/items", items);
 
 var db = process.env.DB_URI;
 
