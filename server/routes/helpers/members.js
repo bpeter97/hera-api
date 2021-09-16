@@ -20,14 +20,7 @@ exports.getMembers = (req, res) => {
 // @desc    Retrieves a Member
 // @access  Private
 exports.getMember = async (req, res) => {
-	let errors = {};
-
-	if (!ObjectID.isValid(req.params.id)) {
-		errors.member = "There was no member found";
-		return res.status(400).json(errors);
-	}
-
-	Member.findById(req.params.id)
+	Member.findOne({ discordId: req.params.id })
 		.then((member) => {
 			if (!member) {
 				return res.json({ error: "There was no member found" });
