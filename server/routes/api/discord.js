@@ -56,8 +56,6 @@ router.get("/user", async (req, res) => {
 				found = guilds.find(
 					(guild) => guild.id === process.env.GUILD_ID
 				);
-				console.log(guilds);
-				console.log(found);
 
 				userData.guild = found;
 
