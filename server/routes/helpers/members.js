@@ -60,26 +60,23 @@ exports.postMember = async (req, res) => {
 // @desc    Updates a member
 // @access  Private
 exports.patchMember = async (req, res) => {
-	await Member.findOneAndUpdate(
-		{ discordId: req.params.id },
-		{
-			$set: {
-				username: req.body.username,
-				discordId: req.body.discordId,
-				roles: req.body.roles,
-			},
-		},
-		{ new: true },
-		(err, member) => {
-			if (!member) {
-				return res.json({
-					error: "There was an issue updating the member.",
-				});
-			}
+	let update = {
+		username: req.body.username,
+		discordId: req.body.discordId,
+		roles: req.body.roles,
+	};
 
-			res.send(member);
-		}
-	).catch((e) => res.status(404).json(e));
+	let result = await Member.findOneAndUpdate(
+		{ discordId: req.params.id },
+		update,
+		{ new: true }
+	);
+
+	if (!result) {
+		return res.json({
+			error: "There was an issue updating the member.",
+		});
+	}
 };
 
 // @route   DELETE api/members/
