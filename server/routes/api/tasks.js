@@ -8,8 +8,10 @@ const helpers = require("../helpers/tasks");
 // @access  public
 router.route("/").get(helpers.getTasks).post(helpers.postTask);
 
-// @route   api/tosts/:id
-// @DELETE  Deletes all tosts.
+// @route   api/tasks/:id
+// @DELETE  Deletes all tasks.
+// @PATCH  	Updates a task.
+// @GET  	Retrieves a task.
 // @access  public
 router
 	.route("/:id")
