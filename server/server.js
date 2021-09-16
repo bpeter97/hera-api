@@ -20,10 +20,12 @@ app.use(cors());
 const tasks = require("./routes/api/tasks");
 const discord = require("./routes/api/discord");
 const items = require("./routes/api/items");
+const regions = require("./routes/api/regions");
 
 app.use("/api/tasks", tasks);
 app.use("/api/discord", discord);
 app.use("/api/items", items);
+app.use("/api/regions", regions);
 
 var db = process.env.DB_URI;
 
