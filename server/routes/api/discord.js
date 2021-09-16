@@ -37,9 +37,7 @@ router.get("/callback", async (req, res) => {
 			grantType: "authorization_code",
 		})
 		.then((access_data) => {
-			let url = process.env.FRONTEND
-				? `${process.env.FRONTEND}?d=${access_data.access_token}`
-				: `http://localhost:8080/?d=${access_data.access_token}`;
+			let url = `${process.env.FRONTEND}?d=${access_data.access_token}`;
 			res.redirect(url);
 		});
 });
@@ -58,6 +56,8 @@ router.get("/user", async (req, res) => {
 				found = guilds.find(
 					(guild) => guild.id === process.env.GUILD_ID
 				);
+				console.log(guilds);
+				console.log(found);
 
 				userData.guild = found;
 
