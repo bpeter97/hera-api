@@ -13,6 +13,9 @@ const TaskSchema = new Schema({
 	status: {
 		type: String,
 	},
+	region: {
+		type: String,
+	},
 	logiStatus: {
 		type: String,
 	},
