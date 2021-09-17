@@ -1,6 +1,5 @@
 const _ = require("lodash");
 const Member = require("../../models/Member");
-const ObjectID = require("mongoose").Types.ObjectId;
 
 // @route   GET api/members/
 // @desc    Retrieves all members

@@ -1,5 +1,4 @@
 const router = require("express").Router();
-
 const helpers = require("../helpers/members");
 
 // @route   api/members
