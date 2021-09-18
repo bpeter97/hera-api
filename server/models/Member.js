@@ -12,6 +12,9 @@ const MemberSchema = new Schema({
 	roles: {
 		type: Array,
 	},
+	commends: {
+		type: Number,
+	},
 });
 
 // Export the Task model.
