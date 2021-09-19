@@ -64,6 +64,14 @@ exports.postTask = async (req, res) => {
 	// Fetch validation errors.
 	const { errors, isValid } = validateTaskInput(req.body);
 
+	let items = req.body.items.forEach((item) => {
+		return {
+			item: item.item,
+			quantity: parseInt(item.quantity),
+			type: item.type,
+		};
+	});
+
 	// send 400 error with validation errors if not valid.
 	if (!isValid) return res.status(400).json(errors);
 
@@ -76,7 +84,7 @@ exports.postTask = async (req, res) => {
 		location: req.body.location,
 		precedence: req.body.precedence,
 		enemyActivity: req.body.enemyActivity,
-		items: req.body.items,
+		items: items,
 		assignedTo: [],
 		completedAt: null,
 	};
