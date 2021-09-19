@@ -2,6 +2,9 @@ const _ = require("lodash");
 const Task = require("../../models/Task");
 const ObjectID = require("mongoose").Types.ObjectId;
 
+// validation files
+const validateTaskInput = require("./validators/taskValidator");
+
 // @route   GET api/tasks/
 // @desc    Retrieves all tasks
 // @access  Private
@@ -58,6 +61,12 @@ exports.getTask = async (req, res) => {
 // @desc    Creates a new task
 // @access  Private
 exports.postTask = async (req, res) => {
+	// Fetch validation errors.
+	const { errors, isValid } = validateTaskInput(req.body);
+
+	// send 400 error with validation errors if not valid.
+	if (!isValid) return res.status(400).json(errors);
+
 	let data = {
 		requestedBy: req.body.requestedBy,
 		requestedAt: new Date(),
