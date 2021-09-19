@@ -37,6 +37,7 @@ exports.postMember = async (req, res) => {
 		username: req.body.username,
 		discordId: req.body.discordId,
 		roles: req.body.roles,
+		commends: 0,
 	};
 
 	let newMember = new Member(data);
@@ -75,6 +76,8 @@ exports.patchMember = async (req, res) => {
 		return res.json({
 			error: "There was an issue updating the member.",
 		});
+	} else {
+		res.send(result);
 	}
 };
 
@@ -86,4 +89,42 @@ exports.deleteMember = async (req, res) => {
 		if (err) return res.status(40).json({ error: err });
 		res.status(200).send(doc);
 	});
+};
+
+// @route   GET api/members/commend/:username
+// @desc    Commends a member
+// @access  Private
+exports.commendMember = async (req, res) => {
+	let result = await Member.findOneAndUpdate(
+		{ username: req.params.username },
+		{ $inc: { commends: 1 } },
+		{ new: true }
+	);
+
+	if (!result) {
+		return res.json({
+			error: "There was an issue updating the member.",
+		});
+	} else {
+		res.send(result);
+	}
+};
+
+// @route   GET api/members/commend/:username/:amount
+// @desc    Commends a member with teh number passed in params
+// @access  Private
+exports.commendMemberMultiple = async (req, res) => {
+	let result = await Member.findOneAndUpdate(
+		{ username: req.params.username },
+		{ $inc: { commends: req.params.amount } },
+		{ new: true }
+	);
+
+	if (!result) {
+		return res.json({
+			error: "There was an issue updating the member.",
+		});
+	} else {
+		res.send(result);
+	}
 };

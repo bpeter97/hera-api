@@ -18,4 +18,14 @@ router
 	.get(helpers.getMember)
 	.patch(helpers.patchMember);
 
+// @route	api/members/commend/:username
+// @PATCH	Increments a member's commends
+// @access	Leadership roles
+router.route("/commend/:username").get(helpers.commendMember);
+
+// @route	api/members/commend/:username/:amount
+// @PATCH	Increments a member's commends
+// @access	Leadership roles
+router.route("/commend/:username/:amount").get(helpers.commendMemberMultiple);
+
 module.exports = router;
