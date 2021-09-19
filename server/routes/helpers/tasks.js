@@ -64,7 +64,7 @@ exports.postTask = async (req, res) => {
 	// Fetch validation errors.
 	const { errors, isValid } = validateTaskInput(req.body);
 
-	let items = req.body.items.forEach((item) => {
+	let items = req.body.items.map((item) => {
 		return {
 			item: item.item,
 			quantity: parseInt(item.quantity),
