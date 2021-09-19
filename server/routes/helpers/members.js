@@ -69,7 +69,7 @@ exports.patchMember = async (req, res) => {
 	let result = await Member.findOneAndUpdate(
 		{ discordId: req.params.id },
 		update,
-		{ new: true }
+		{ new: true, upsert: true }
 	);
 
 	if (!result) {

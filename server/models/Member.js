@@ -14,6 +14,7 @@ const MemberSchema = new Schema({
 	},
 	commends: {
 		type: Number,
+		default: 0,
 	},
 });
 
