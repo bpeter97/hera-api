@@ -115,7 +115,12 @@ exports.commendMember = async (req, res) => {
 // @access  Private
 exports.commendMemberMultiple = async (req, res) => {
 	let result = await Member.findOneAndUpdate(
-		{ username: req.params.username },
+		{
+			$or: [
+				{ username: req.params.username },
+				{ discordId: req.params.username },
+			],
+		},
 		{ $inc: { commends: req.params.amount } },
 		{ new: true }
 	);
