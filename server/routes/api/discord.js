@@ -2,6 +2,7 @@ const router = require("express").Router();
 var redirect = "https://hera-tasks.herokuapp.com/api/discord/callback";
 
 const DiscordOauth2 = require("discord-oauth2");
+const Member = require("../../models/Member");
 const oauth = new DiscordOauth2({
 	clientId: process.env.DAPP_CID,
 	clientSecret: process.env.DAPP_SID,
@@ -50,6 +51,7 @@ router.get("/user", async (req, res) => {
 			let userData = {
 				info: userInfo,
 				guild: {},
+				roles: [],
 			};
 
 			oauth.getUserGuilds(req.headers.authorization).then((guilds) => {
@@ -64,6 +66,11 @@ router.get("/user", async (req, res) => {
 						error: "You must be apart of the units discord channel before being able to log in!",
 					});
 				} else {
+					Member.findOne({ discordId: userData.info.id }).then(
+						(info) => {
+							userData.roles = info.roles;
+						}
+					);
 					res.send(userData);
 				}
 			});
