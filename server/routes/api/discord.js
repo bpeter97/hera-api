@@ -44,7 +44,6 @@ router.get("/callback", async (req, res) => {
 });
 
 router.get("/user", async (req, res) => {
-	console.log(req.headers.authorization);
 	oauth
 		.getUser(req.headers.authorization)
 		.then((userInfo) => {
@@ -67,11 +66,19 @@ router.get("/user", async (req, res) => {
 					});
 				} else {
 					Member.findOne({ discordId: userData.info.id }).then(
-						(info) => {
-							userData.roles = info.roles;
+						(member) => {
+							if (!member) {
+								console.log(member);
+								return res.json({
+									error: "There was no member found.",
+								});
+							}
+							member.roles.forEach((role) => {
+								userData.roles.push(role);
+							});
+							res.send(userData);
 						}
 					);
-					res.send(userData);
 				}
 			});
 		})
