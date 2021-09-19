@@ -7,6 +7,7 @@ const ObjectID = require("mongoose").Types.ObjectId;
 // @access  Private
 exports.getTasks = (req, res) => {
 	Task.find({})
+		.sort({ requestedAt: -1 })
 		.then((tasks) => {
 			if (!tasks) {
 				return res.json({ error: "No tasks found." });

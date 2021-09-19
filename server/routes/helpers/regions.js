@@ -6,6 +6,7 @@ const Region = require("../../models/Region");
 // @access  Private
 exports.getRegions = (req, res) => {
 	Region.find({})
+		.sort({ name: 1 })
 		.then((regions) => {
 			if (!regions) {
 				return res.json({ error: "No regions found." });

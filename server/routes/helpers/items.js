@@ -7,6 +7,7 @@ const ObjectID = require("mongoose").Types.ObjectId;
 // @access  Private
 exports.getItems = (req, res) => {
 	Item.find({})
+		.sort({ name: 1 })
 		.then((items) => {
 			if (!items) {
 				return res.json({ error: "No items found." });
@@ -25,6 +26,7 @@ exports.getFactionItems = (req, res) => {
 	};
 
 	Item.find({ faction: { $in: [param(req.params.faction), "Neutral"] } })
+		.sort({ name: 1 })
 		.then((items) => {
 			if (!items) {
 				return res.json({ error: "No items found." });
