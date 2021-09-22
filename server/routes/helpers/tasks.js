@@ -163,7 +163,7 @@ exports.patchTask = async (req, res) => {
 						);
 					} else if (update.logiStatus !== task.logiStatus) {
 						if (
-							update.logiStatus === "Delivery" &&
+							update.logiStatus === "Delivering" &&
 							update.enemyActivity === true
 						) {
 							var assignedToIds = [];
