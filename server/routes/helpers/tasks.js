@@ -1,6 +1,8 @@
 const _ = require("lodash");
 const Task = require("../../models/Task");
+const Member = require("../../models/Member");
 const ObjectID = require("mongoose").Types.ObjectId;
+const axios = require("axios");
 
 // validation files
 const validateTaskInput = require("./validators/taskValidator");
@@ -131,13 +133,94 @@ exports.patchTask = async (req, res) => {
 		completedAt: req.body.completedAt,
 	};
 
-	Task.findByIdAndUpdate(req.params.id, update, { new: true })
+	await Task.findByIdAndUpdate(req.params.id, update)
 		.then((task) => {
 			if (!task) {
 				return res.json({ error: "No task was found." });
 			}
-			io.emit("task-change", { change: "PATCH", task });
-			res.send(task);
+
+			Member.findOne({ username: task.requestedBy })
+				.then((member) => {
+					if (!member) {
+						return res.json({ error: "There was no member found" });
+					}
+
+					let sendObj = {};
+
+					if (update.status !== task.status) {
+						console.log("status did not match");
+						sendObj = {
+							discordId: member.discordId,
+							requestId: task.taskId,
+							logiStatus: update.status,
+							assignedTo: req.body.assignedTo,
+							updateType: "update",
+						};
+
+						axios.post(
+							"https://hera-discord.herokuapp.com/newEvent",
+							sendObj
+						);
+					} else if (update.logiStatus !== task.logiStatus) {
+						if (
+							update.logiStatus === "Delivery" &&
+							update.enemyActivity === true
+						) {
+							var assignedToIds = [];
+
+							var getAssignedIds = new Promise(
+								(resolve, reject) => {
+									update.assignedTo.forEach(
+										(person, index, array) => {
+											Member.findOne({
+												username: person,
+											}).then((assignee) => {
+												assignedToIds.push(
+													assignee.discordId
+												);
+											});
+											if (index === array.length - 1)
+												resolve();
+										}
+									);
+								}
+							);
+
+							setTimeout(() => {
+								getAssignedIds.then(() => {
+									sendObj = {
+										discordId: member.discordId,
+										requestId: task.taskId,
+										logiStatus: update.logiStatus,
+										assignedTo: assignedToIds[0],
+										updateType: "antiPartisan",
+									};
+
+									notification = axios.post(
+										"https://hera-discord.herokuapp.com/newEvent",
+										sendObj
+									);
+								});
+							}, 1500);
+						} else {
+							sendObj = {
+								discordId: member.discordId,
+								requestId: task.taskId,
+								logiStatus: update.logiStatus,
+								assignedTo: req.body.assignedTo,
+								updateType: "update",
+							};
+
+							notification = axios.post(
+								"https://hera-discord.herokuapp.com/newEvent",
+								sendObj
+							);
+						}
+					}
+					io.emit("task-change", { change: "PATCH", task });
+					res.send(task);
+				})
+				.catch((e) => res.status(404).json(e));
 		})
 		.catch((e) => res.status(404).json(e));
 };
@@ -160,8 +243,29 @@ exports.deleteTask = async (req, res) => {
 				errors.task = "There was no task found";
 				res.status(404).json(errors);
 			}
-			io.emit("task-change", { change: "DELETE", task });
-			res.send(task);
+
+			Member.findOne({ username: task.requestedBy })
+				.then((member) => {
+					if (!member) {
+						return res.json({ error: "There was no member found" });
+					}
+
+					let sendObj = {
+						discordId: member.discordId,
+						requestId: task.taskId,
+						logiStatus: task.status,
+						updateType: "delete",
+					};
+
+					axios.post(
+						"https://hera-discord.herokuapp.com/newEvent",
+						sendObj
+					);
+
+					io.emit("task-change", { change: "DELETE", task });
+					res.send(task);
+				})
+				.catch((e) => res.status(404).json(e));
 		})
 		.catch((e) => res.status(404).json(e));
 };
