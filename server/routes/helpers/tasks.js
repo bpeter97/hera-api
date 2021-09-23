@@ -102,6 +102,21 @@ exports.postTask = async (req, res) => {
 				});
 			}
 
+			sendObj = {
+				discordId: "",
+				requestId: task.taskId,
+				logiStatus: "",
+				assignedTo: "",
+				updateType: "new",
+			};
+
+			if (process.env.NODE_ENV !== "development") {
+				axios.post(
+					"https://hera-discord.herokuapp.com/newEvent",
+					sendObj
+				);
+			}
+
 			io.emit("task-change", { change: "POST", task });
 			res.send(task);
 		})
@@ -148,7 +163,6 @@ exports.patchTask = async (req, res) => {
 					let sendObj = {};
 
 					if (update.status !== task.status) {
-						console.log("status did not match");
 						sendObj = {
 							discordId: member.discordId,
 							requestId: task.taskId,
@@ -157,10 +171,12 @@ exports.patchTask = async (req, res) => {
 							updateType: "update",
 						};
 
-						axios.post(
-							"https://hera-discord.herokuapp.com/newEvent",
-							sendObj
-						);
+						if (process.env.NODE_ENV !== "development") {
+							axios.post(
+								"https://hera-discord.herokuapp.com/newEvent",
+								sendObj
+							);
+						}
 					} else if (update.logiStatus !== task.logiStatus) {
 						if (
 							update.logiStatus === "Delivering" &&
@@ -196,10 +212,14 @@ exports.patchTask = async (req, res) => {
 										updateType: "antiPartisan",
 									};
 
-									notification = axios.post(
-										"https://hera-discord.herokuapp.com/newEvent",
-										sendObj
-									);
+									if (
+										process.env.NODE_ENV !== "development"
+									) {
+										axios.post(
+											"https://hera-discord.herokuapp.com/newEvent",
+											sendObj
+										);
+									}
 								});
 							}, 1500);
 						} else {
@@ -211,10 +231,12 @@ exports.patchTask = async (req, res) => {
 								updateType: "update",
 							};
 
-							notification = axios.post(
-								"https://hera-discord.herokuapp.com/newEvent",
-								sendObj
-							);
+							if (process.env.NODE_ENV !== "development") {
+								axios.post(
+									"https://hera-discord.herokuapp.com/newEvent",
+									sendObj
+								);
+							}
 						}
 					}
 
@@ -260,10 +282,12 @@ exports.deleteTask = async (req, res) => {
 						updateType: "delete",
 					};
 
-					axios.post(
-						"https://hera-discord.herokuapp.com/newEvent",
-						sendObj
-					);
+					if (process.env.NODE_ENV !== "development") {
+						axios.post(
+							"https://hera-discord.herokuapp.com/newEvent",
+							sendObj
+						);
+					}
 
 					io.emit("task-change", { change: "DELETE", task });
 					res.send(task);

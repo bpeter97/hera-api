@@ -8,7 +8,7 @@ const TaskSchema = new Schema({
 		type: String,
 	},
 	requestedAt: {
-		type: Date,
+		type: String,
 	},
 	status: {
 		type: String,
