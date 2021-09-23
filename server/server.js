@@ -29,7 +29,12 @@ app.use("/api/items", items);
 app.use("/api/regions", regions);
 app.use("/api/members", members);
 
-var db = process.env.DB_URI;
+var db;
+if (process.env.NODE_ENV === "development") {
+	db = process.env.DEV_DB;
+} else {
+	db = process.env.DB_URI;
+}
 
 // Connect to the DB.
 mongoose

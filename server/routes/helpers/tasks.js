@@ -217,8 +217,11 @@ exports.patchTask = async (req, res) => {
 							);
 						}
 					}
-					io.emit("task-change", { change: "PATCH", task });
-					res.send(task);
+
+					Task.findById({ _id: task._id }).then((task) => {
+						io.emit("task-change", { change: "PATCH", task });
+						res.send(task);
+					});
 				})
 				.catch((e) => res.status(404).json(e));
 		})
