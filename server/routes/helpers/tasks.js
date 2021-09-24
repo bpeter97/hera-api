@@ -163,19 +163,21 @@ exports.patchTask = async (req, res) => {
 					let sendObj = {};
 
 					if (update.status !== task.status) {
-						sendObj = {
-							discordId: member.discordId,
-							requestId: task.taskId,
-							logiStatus: update.status,
-							assignedTo: req.body.assignedTo,
-							updateType: "update",
-						};
+						if (update.status === "Accepted") {
+							sendObj = {
+								discordId: member.discordId,
+								requestId: task.taskId,
+								logiStatus: update.status,
+								assignedTo: req.body.assignedTo,
+								updateType: "update",
+							};
 
-						if (process.env.NODE_ENV !== "development") {
-							axios.post(
-								"https://hera-discord.herokuapp.com/newEvent",
-								sendObj
-							);
+							if (process.env.NODE_ENV !== "development") {
+								axios.post(
+									"https://hera-discord.herokuapp.com/newEvent",
+									sendObj
+								);
+							}
 						}
 					} else if (update.logiStatus !== task.logiStatus) {
 						if (
