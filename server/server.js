@@ -18,12 +18,14 @@ app.use(cors());
 
 // routes
 const tasks = require("./routes/api/tasks");
+const events = require("./routes/api/events");
 const discord = require("./routes/api/discord");
 const items = require("./routes/api/items");
 const regions = require("./routes/api/regions");
 const members = require("./routes/api/members");
 
 app.use("/api/tasks", tasks);
+app.use("/api/events", events);
 app.use("/api/discord", discord);
 app.use("/api/items", items);
 app.use("/api/regions", regions);

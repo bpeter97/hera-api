@@ -50,7 +50,7 @@ exports.postMember = async (req, res) => {
 					error: "There was an issue saving the member.",
 				});
 			}
-
+			console.log(chalk.yellow(`There was a new member created`, member));
 			res.send(member);
 		})
 		.catch((e) => console.log(e));
@@ -73,10 +73,14 @@ exports.patchMember = async (req, res) => {
 	);
 
 	if (!result) {
+		console.log(
+			chalk.red(`There an issue finding and updating the member`, result)
+		);
 		return res.json({
 			error: "There was an issue updating the member.",
 		});
 	} else {
+		console.log(chalk.yellow(`There was a new member updated`, result));
 		res.send(result);
 	}
 };
@@ -87,6 +91,7 @@ exports.patchMember = async (req, res) => {
 exports.deleteMember = async (req, res) => {
 	Member.findOneAndDelete({ discordId: req.params.id }).exec((err, doc) => {
 		if (err) return res.status(40).json({ error: err });
+		console.log(chalk.yellow(`There was a member deleted`, doc));
 		res.status(200).send(doc);
 	});
 };
