@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const Member = require("../../models/Member");
+const chalk = require("chalk");
 
 // @route   GET api/members/
 // @desc    Retrieves all members
