@@ -88,7 +88,6 @@ exports.postTask = async (req, res) => {
 		precedence: req.body.precedence,
 		enemyActivity: req.body.enemyActivity,
 		items: items,
-		type: req.body.type,
 		assignedTo: [],
 		completedAt: null,
 	};
@@ -99,11 +98,6 @@ exports.postTask = async (req, res) => {
 		.save()
 		.then((task) => {
 			if (!task) {
-				console.log(
-					chalk.red(
-						`There was an issue creating a task requested by ${req.body.requestedBy} at ${data.requestedAt}`
-					)
-				);
 				return res.json({
 					error: "There was an issue saving the task.",
 				});
@@ -123,11 +117,6 @@ exports.postTask = async (req, res) => {
 				};
 
 				if (process.env.NODE_ENV !== "development") {
-					console.log(
-						chalk.yellow(
-							`A request was created by ${req.body.requestedBy} at ${data.requestedAt}.`
-						)
-					);
 					axios.post(
 						"https://hera-discord.herokuapp.com/newEvent",
 						sendObj
@@ -164,7 +153,6 @@ exports.patchTask = async (req, res) => {
 		items: req.body.items,
 		assignedTo: req.body.assignedTo,
 		completedAt: req.body.completedAt,
-		type: req.body.type,
 	};
 
 	await Task.findByIdAndUpdate(req.params.id, update)
@@ -181,27 +169,30 @@ exports.patchTask = async (req, res) => {
 
 					let sendObj = {};
 
+					console.log("update", update);
+					console.log("task", task);
+
 					if (update.status !== task.status) {
+						console.log("update status does not match task status");
+
 						if (update.status === "Accepted") {
+							console.log("update status equals accepted");
 							sendObj = {
 								discordId: member.discordId,
 								requestId: task.taskId,
 								logiStatus: update.status,
 								assignedTo: req.body.assignedTo,
 								updateType: "update",
+								testing: true,
 							};
 
-							if (process.env.NODE_ENV !== "development") {
-								console.log(
-									chalk.yellow(
-										`Request # ${sendObj.requestId} was updated at ${data.requestedAt}.`
-									)
-								);
-								axios.post(
-									"https://hera-discord.herokuapp.com/newEvent",
-									sendObj
-								);
-							}
+							// if (process.env.NODE_ENV !== "development") {
+							console.log(sendObj);
+							axios.post(
+								"https://hera-discord.herokuapp.com/newEvent",
+								sendObj
+							);
+							// }
 						}
 					} else if (update.logiStatus !== task.logiStatus) {
 						if (
@@ -241,11 +232,6 @@ exports.patchTask = async (req, res) => {
 									if (
 										process.env.NODE_ENV !== "development"
 									) {
-										console.log(
-											chalk.yellow(
-												`Request # ${sendObj.requestId} was updated at ${data.requestedAt}.`
-											)
-										);
 										axios.post(
 											"https://hera-discord.herokuapp.com/newEvent",
 											sendObj
@@ -263,11 +249,6 @@ exports.patchTask = async (req, res) => {
 							};
 
 							if (process.env.NODE_ENV !== "development") {
-								console.log(
-									chalk.yellow(
-										`Request # ${sendObj.requestId} was updated at ${data.requestedAt}.`
-									)
-								);
 								axios.post(
 									"https://hera-discord.herokuapp.com/newEvent",
 									sendObj
@@ -319,11 +300,6 @@ exports.deleteTask = async (req, res) => {
 					};
 
 					if (process.env.NODE_ENV !== "development") {
-						console.log(
-							chalk.yellow(
-								`Request # ${task.taskId} was deleted.`
-							)
-						);
 						axios.post(
 							"https://hera-discord.herokuapp.com/newEvent",
 							sendObj
