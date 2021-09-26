@@ -37,6 +37,9 @@ const TaskSchema = new Schema({
 	completedAt: {
 		type: Date,
 	},
+	type: {
+		type: String,
+	},
 });
 
 TaskSchema.plugin(AutoIncrement, { inc_field: "taskId" });

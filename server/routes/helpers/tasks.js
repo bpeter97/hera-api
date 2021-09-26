@@ -90,6 +90,7 @@ exports.postTask = async (req, res) => {
 		items: items,
 		assignedTo: [],
 		completedAt: null,
+		type: req.body.type,
 	};
 
 	let newTask = new Task(data);
@@ -153,6 +154,7 @@ exports.patchTask = async (req, res) => {
 		items: req.body.items,
 		assignedTo: req.body.assignedTo,
 		completedAt: req.body.completedAt,
+		type: req.body.type,
 	};
 
 	await Task.findByIdAndUpdate(req.params.id, update)
@@ -169,30 +171,20 @@ exports.patchTask = async (req, res) => {
 
 					let sendObj = {};
 
-					console.log("update", update);
-					console.log("task", task);
-
 					if (update.status !== task.status) {
-						console.log("update status does not match task status");
+						sendObj = {
+							discordId: member.discordId,
+							requestId: task.taskId,
+							logiStatus: update.status,
+							assignedTo: req.body.assignedTo,
+							updateType: "update",
+						};
 
-						if (update.status === "Accepted") {
-							console.log("update status equals accepted");
-							sendObj = {
-								discordId: member.discordId,
-								requestId: task.taskId,
-								logiStatus: update.status,
-								assignedTo: req.body.assignedTo,
-								updateType: "update",
-								testing: true,
-							};
-
-							// if (process.env.NODE_ENV !== "development") {
-							console.log(sendObj);
+						if (process.env.NODE_ENV !== "development") {
 							axios.post(
 								"https://hera-discord.herokuapp.com/newEvent",
 								sendObj
 							);
-							// }
 						}
 					} else if (update.logiStatus !== task.logiStatus) {
 						if (
