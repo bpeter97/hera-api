@@ -88,6 +88,7 @@ exports.postTask = async (req, res) => {
 		precedence: req.body.precedence,
 		enemyActivity: req.body.enemyActivity,
 		items: items,
+		type: req.body.type,
 		assignedTo: [],
 		completedAt: null,
 	};
@@ -163,6 +164,7 @@ exports.patchTask = async (req, res) => {
 		items: req.body.items,
 		assignedTo: req.body.assignedTo,
 		completedAt: req.body.completedAt,
+		type: req.body.type,
 	};
 
 	await Task.findByIdAndUpdate(req.params.id, update)
