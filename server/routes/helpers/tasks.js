@@ -144,7 +144,6 @@ exports.patchTask = async (req, res) => {
 
 	let update = {
 		requestedBy: req.body.requestedBy,
-		requestedAt: req.body.requestedAt,
 		status: req.body.status,
 		region: req.body.region,
 		logiStatus: req.body.logiStatus,
