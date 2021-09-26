@@ -23,6 +23,7 @@ const discord = require("./routes/api/discord");
 const items = require("./routes/api/items");
 const regions = require("./routes/api/regions");
 const members = require("./routes/api/members");
+const logs = require("./routes/api/logs");
 
 app.use("/api/tasks", tasks);
 app.use("/api/events", events);
@@ -30,6 +31,7 @@ app.use("/api/discord", discord);
 app.use("/api/items", items);
 app.use("/api/regions", regions);
 app.use("/api/members", members);
+app.use("/api/logs", logs);
 
 var db;
 if (process.env.NODE_ENV === "development") {
