@@ -18,10 +18,10 @@ router
 	.get(helpers.getMember)
 	.patch(helpers.patchMember);
 
-// @route	api/members/commend/:username
+// @route	api/members/commend/:discordid
 // @PATCH	Increments a member's commends
 // @access	Leadership roles
-router.route("/commend/:username").get(helpers.commendMember);
+router.route("/commend/:discordid").patch(helpers.commendMember);
 
 // @route	api/members/commend/:username/:amount
 // @PATCH	Increments a member's commends

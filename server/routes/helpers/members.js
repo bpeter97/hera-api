@@ -96,15 +96,17 @@ exports.deleteMember = async (req, res) => {
 	});
 };
 
-// @route   GET api/members/commend/:username
+// @route   GET api/members/commend/:id
 // @desc    Commends a member
 // @access  Private
 exports.commendMember = async (req, res) => {
+	let commend = _.pick(req.body, ["type", "reason"]);
+
 	let result = await Member.findOneAndUpdate(
-		{ username: req.params.username },
-		{ $inc: { commends: 1 } },
+		{ discordId: req.params.discordid },
+		{ $push: { commendList: commend }, $inc: { commends: 1 } },
 		{ new: true }
-	);
+	).then();
 
 	if (!result) {
 		return res.json({

@@ -16,6 +16,9 @@ const MemberSchema = new Schema({
 		type: Number,
 		default: 0,
 	},
+	commendList: {
+		type: Array,
+	},
 });
 
 // Export the Task model.
